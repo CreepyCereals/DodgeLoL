@@ -1,0 +1,18 @@
+/* Css */
+html{
+	font-family: Arial;
+}
+body{
+	float: left;
+}
+
+#canvas{
+	border: 1px black solid;
+}
+
+#log{
+	width: 300px;
+	height: 200px; 
+	border: 1px black solid;
+}
+
