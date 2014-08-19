@@ -2,19 +2,25 @@
 
 function Projectile(champion){
 
-	this.sprite = sprites[champion.sprite];
+	this.spriteSheet = champion.spriteSheet;
+	this.currentSprite = 0;
+	this.sprite = sprites[this.spriteSheet[this.currentSprite]];
+
+	this.animationSpeed = champion.animationSpeed; // Time (in seconds) 
+	this.lastTimeAnimated = Date.now();
+	this.animation = champion.animation;
+
 	this.position = [0, 0];
 	this.speed = [0, 0];
 	this.plainSpeed = champion.speed;
+
 	this.shape = champion.shape;
 
 	if (champion.shape == 'rectangle'){
 
 		this.rotation = 0;
 		this.hyp = Math.sqrt(Math.pow(this.sprite.width, 2) + Math.pow(this.sprite.height, 2));
-	}
-
-	if (champion.shape == 'circle'){
+	}else{
 
 		this.radius = this.sprite.width/2;
 	}
@@ -24,6 +30,22 @@ function Projectile(champion){
 
 		this.position[0] = this.position[0] + this.speed[0] * delay;
 		this.position[1] = this.position[1] + this.speed[1] * delay;
+
+		if (this.animation){
+
+			if ((Date.now() - this.lastTimeAnimated) / 1000 >= this.animationSpeed){
+
+				if (this.currentSprite+1 == this.spriteSheet.length){
+
+					this.currentSprite = 0;
+					this.sprite = sprites[this.spriteSheet[this.currentSprite]];			
+				}else{
+
+					this.sprite = sprites[this.spriteSheet[++this.currentSprite]];
+				}
+				this.lastTimeAnimated = Date.now();
+			}
+		}
 	}
 
 	// Draws the projectile on the canvas.
@@ -93,7 +115,7 @@ function Projectile(champion){
 			}
 		}
 
-		if (this.shape == 'circle'){
+		if (this.shape == 'circle' || this.shape == 'star'){
 
 			var center = [this.position[0]+this.sprite.width/2, this.position[1]+this.sprite.height/2];
 			var distance = Math.sqrt(Math.pow(mouse[0]-center[0], 2)+Math.pow(mouse[1]-center[1], 2));
@@ -115,9 +137,10 @@ function Projectile(champion){
 
 		if (n<=0.25){
 
-			this.position[0] = -canvasMargin;
+			this.position[0] = -(canvasMargin);
 			this.position[1] = Math.random()*CANVAS_HEIGHT;
 			this.speed[0] = (Math.floor(Math.random()*this.plainSpeed));
+
 			if (Math.random()<=0.5){
 
 				this.speed[1] = (this.plainSpeed-this.speed[0]);
@@ -125,12 +148,12 @@ function Projectile(champion){
 
 				this.speed[1] = Math.abs((this.plainSpeed-this.speed[0]))*-1;
 			}
-		}
-		else if (n<=0.5){
+		}else if (n<=0.5){
 
 			this.position[0] = Math.random()*CANVAS_WIDTH;
 			this.position[1] = -canvasMargin;
 			this.speed[1] = (Math.floor(Math.random()*this.plainSpeed));
+
 			if (Math.random()<=0.5){
 
 				this.speed[0] = (this.plainSpeed-this.speed[1]);
@@ -138,12 +161,12 @@ function Projectile(champion){
 
 				this.speed[0] = Math.abs((this.plainSpeed-this.speed[1]))*-1;
 			}
-		}
-		else if (n<=0.75){
+		}else if (n<=0.75){
 
 			this.position[0] = CANVAS_WIDTH+canvasMargin;
 			this.position[1] = Math.random()*CANVAS_HEIGHT;
 			this.speed[0] = (Math.floor(Math.random()*this.plainSpeed))*-1;
+
 			if (Math.random()<=0.5){
 
 				this.speed[1] = (this.plainSpeed-Math.abs(this.speed[0]));
@@ -151,12 +174,12 @@ function Projectile(champion){
 
 				this.speed[1] = Math.abs(this.plainSpeed-Math.abs(this.speed[0]))*-1;
 			}
-		}
-		else if(n<=1){
+		}else if(n<=1){
 
 			this.position[0] = Math.random()*CANVAS_WIDTH;
 			this.position[1] = (CANVAS_HEIGHT + canvasMargin);
 			this.speed[1] = (Math.floor(Math.random()*this.plainSpeed))*-1;
+
 			if (Math.random()<=0.5){
 
 				this.speed[0] = (this.plainSpeed-Math.abs(this.speed[1]));
@@ -165,6 +188,7 @@ function Projectile(champion){
 				this.speed[0] = Math.abs((this.plainSpeed-Math.abs(this.speed[1])))*-1;
 			}
 		}
+
 		if (this.shape == 'rectangle'){
 
 			if (this.speed[1] > 0){

@@ -14,10 +14,13 @@ function error(id){
 }
 
 function createProjectiles(){
-	for (var i = 0; i < 15; i++){
+	for (var i = 0; i < 10; i++){
 		projectiles.push(new Projectile(Morgana));
 	}
-	for (var i = 0; i < 15; i++){
+	for (var i = 0; i < 10; i++){
 		projectiles.push(new Projectile(Brand));
+	}
+	for (var i = 0; i < 10; i++){
+		projectiles.push(new Projectile(Kennen));
 	}
 }
