@@ -31,8 +31,9 @@ function createCanvas(){
 	document.getElementById("canvas-container").appendChild(canvas);
 
 	canvas.addEventListener('mousemove', function(e){
-		mouse[0] = e.offsetX;
-		mouse[1] = e.offsetY;
+		mouse[0] = e.clientX;
+		mouse[1] = e.clientY;
+
 	}, false);
 
 	loadMedia();
@@ -71,7 +72,7 @@ function resume(){
 function gameOver(){
 
 	console.log("GAME OVER");
-	//stop();
+	stop();
 }
 
 
